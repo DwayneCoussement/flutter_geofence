@@ -3,46 +3,51 @@ import UIKit
 
 public class SwiftGeofencePlugin: NSObject, FlutterPlugin {
 	private var geofenceManager: GeofenceManager!
-    private var channel: FlutterMethodChannel
-
+	private var channel: FlutterMethodChannel
+	
 	public static func register(with registrar: FlutterPluginRegistrar) {
 		let channel = FlutterMethodChannel(name: "geofence", binaryMessenger: registrar.messenger())
 		let instance = SwiftGeofencePlugin(channel: channel)
 		registrar.addMethodCallDelegate(instance, channel: channel)
 	}
-
+	
 	public init(channel: FlutterMethodChannel) {
-	    self.channel = channel
-	    super.init()
-		self.geofenceManager = GeofenceManager(callback: { (region) in
-        	self.handleEvent(region: region)
-        })
+		self.channel = channel
+		super.init()
+		self.geofenceManager = GeofenceManager(callback: { [weak self] (region) in
+				self?.handleGeofenceEvent(region: region)
+			}, locationUpdate: { [weak self] (coordinate) in
+				self?.channel.invokeMethod("userLocationUpdated", arguments: ["lat": coordinate.latitude, "lng": coordinate.longitude])
+		})
 	}
 	
 	public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
 		if (call.method == "addRegion") {
-		    guard let arguments = call.arguments as? [AnyHashable: Any] else { return }
-		    guard let identifier = arguments["id"] as? String,
-		        let latitude = arguments["lat"] as? Double,
-		        let longitude = arguments["lng"] as? Double else {
-		        return
-		     }
-		    let radius = arguments["radius"] as? Double
-		    addRegion(identifier: identifier, latitude: latitude, longitude: longitude, radius: radius)
+			guard let arguments = call.arguments as? [AnyHashable: Any] else { return }
+			guard let identifier = arguments["id"] as? String,
+				let latitude = arguments["lat"] as? Double,
+				let longitude = arguments["lng"] as? Double else {
+					return
+			}
+			let radius = arguments["radius"] as? Double
+			addRegion(identifier: identifier, latitude: latitude, longitude: longitude, radius: radius)
 			result(nil)
 		}
+		else if (call.method == "getUserLocation") {
+			geofenceManager.getUserLocation()
+		}
 	}
-
-	private func handleEvent(region: GeoRegion) {
-	    if (region.events.contains(.entry)) {
-	        channel.invokeMethod("entry", arguments: region.toDictionary())
-        } else {
-            channel.invokeMethod("exit", arguments: region.toDictionary())
-        }
+	
+	private func handleGeofenceEvent(region: GeoRegion) {
+		if (region.events.contains(.entry)) {
+			channel.invokeMethod("entry", arguments: region.toDictionary())
+		} else {
+			channel.invokeMethod("exit", arguments: region.toDictionary())
+		}
 	}
 	
 	private func addRegion(identifier: String, latitude: Double, longitude: Double, radius: Double?) {
 		let georegion = GeoRegion(id: identifier, radius: radius ?? 50.0, latitude: latitude, longitude: longitude, events: [.exit])
-        geofenceManager.startMonitoring(georegion: georegion)
+		geofenceManager.startMonitoring(georegion: georegion)
 	}
 }

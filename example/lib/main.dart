@@ -70,7 +70,12 @@ class _MyAppState extends State<MyApp> {
             }).catchError((onError) {
               print("great failure");
             });
-          },)
+          },),
+          RaisedButton(child: Text("get user location"), onPressed: () {
+              Geofence.getCurrentLocation().then((coordinate) {
+                print("great got latitude: ${coordinate.latitude} and longitude: ${coordinate.longitude}");
+              });
+          })
         ],
         ),
       ),

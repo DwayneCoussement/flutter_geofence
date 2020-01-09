@@ -7,11 +7,22 @@ export 'Geolocation.dart';
 
 typedef void GeofenceCallback(Geolocation foo);
 
+class Coordinate {
+  final double latitude;
+  final double longitude;
+
+  Coordinate(this.latitude, this.longitude);
+}
+
 class Geofence {
   static const MethodChannel _channel = const MethodChannel('geofence');
 
   static GeofenceCallback _entryCallback;
   static GeofenceCallback _exitCallback;
+
+  //ignore: close_sinks
+  static StreamController<Coordinate> userLocationUpdated = new StreamController<Coordinate>();
+  static Stream<Coordinate> _broadcastLocationStream;
 
   static Future<void> addGeolocation(Geolocation geolocation) {
     return _channel.invokeMethod("addRegion", {
@@ -22,16 +33,24 @@ class Geofence {
     });
   }
 
+  static Future<Coordinate> getCurrentLocation() async {
+    _channel.invokeMethod("getUserLocation", null);
+    return _broadcastLocationStream.first;
+  }
+
   static void initialize() {
     var completer = new Completer<void>();
+    _broadcastLocationStream = userLocationUpdated.stream.asBroadcastStream();
     _channel.setMethodCallHandler((call) async {
-      print("got a call ${call.method}, arguments: ${call.arguments}");
       if (call.method == "entry") {
         Geolocation location = Geolocation(latitude: call.arguments["latitude"] as double, longitude: call.arguments["longitude"] as double, radius: call.arguments["radius"] as double, id: call.arguments["id"] as String);
         _entryCallback(location);
       } else if (call.method == "exit") {
         Geolocation location = Geolocation(latitude: call.arguments["latitude"] as double, longitude: call.arguments["longitude"] as double, radius: call.arguments["radius"] as double, id: call.arguments["id"] as String);
         _exitCallback(location);
+      } else if (call.method == "userLocationUpdated") {
+        Coordinate coordinate = Coordinate(call.arguments["lat"], call.arguments["lng"]);
+        userLocationUpdated.sink.add(coordinate);
       }
       completer.complete();
     });
