@@ -30,7 +30,8 @@ public class SwiftGeofencePlugin: NSObject, FlutterPlugin {
 					return
 			}
 			let radius = arguments["radius"] as? Double
-			addRegion(identifier: identifier, latitude: latitude, longitude: longitude, radius: radius)
+			let event = arguments["event"] as? String
+			addRegion(identifier: identifier, latitude: latitude, longitude: longitude, radius: radius, event: event ?? "")
 			result(nil)
 		}
 		else if (call.method == "getUserLocation") {
@@ -46,8 +47,17 @@ public class SwiftGeofencePlugin: NSObject, FlutterPlugin {
 		}
 	}
 	
-	private func addRegion(identifier: String, latitude: Double, longitude: Double, radius: Double?) {
-		let georegion = GeoRegion(id: identifier, radius: radius ?? 50.0, latitude: latitude, longitude: longitude, events: [.exit])
+	private func addRegion(identifier: String, latitude: Double, longitude: Double, radius: Double?, event: String) {
+		let events: [GeoEvent]
+		switch event {
+		case "entry":
+			events = [.entry]
+		case "exit":
+			events = [.exit]
+		default:
+			events = [.entry, .exit]
+		}
+		let georegion = GeoRegion(id: identifier, radius: radius ?? 50.0, latitude: latitude, longitude: longitude, events: events)
 		geofenceManager.startMonitoring(georegion: georegion)
 	}
 }

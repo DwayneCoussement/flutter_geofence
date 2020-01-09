@@ -24,12 +24,13 @@ class Geofence {
   static StreamController<Coordinate> userLocationUpdated = new StreamController<Coordinate>();
   static Stream<Coordinate> _broadcastLocationStream;
 
-  static Future<void> addGeolocation(Geolocation geolocation) {
+  static Future<void> addGeolocation(Geolocation geolocation, GeolocationEvent event) {
     return _channel.invokeMethod("addRegion", {
       "lng": geolocation.longitude,
       "lat": geolocation.latitude,
       "id": geolocation.id,
-      "radius": geolocation.radius
+      "radius": geolocation.radius,
+      "event": event.toString(),
     });
   }
 

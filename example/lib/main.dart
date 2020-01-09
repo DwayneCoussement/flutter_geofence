@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -64,7 +66,7 @@ class _MyAppState extends State<MyApp> {
           Text('Running on: $_platformVersion\n'),
           RaisedButton(child: Text("Add region"), onPressed: () {
             Geolocation location = Geolocation(latitude: 50.853410, longitude: 3.354470, radius: 50.0, id: "Kerkplein13");
-            Geofence.addGeolocation(location).then((onValue) {
+            Geofence.addGeolocation(location, GeolocationEvent.entry).then((onValue) {
               print("great success");
               scheduleNotification("Georegion added", "Your geofence has been added!");
             }).catchError((onError) {
