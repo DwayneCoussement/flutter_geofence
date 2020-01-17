@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.os.Looper
+import android.util.Log
 import com.google.android.gms.location.*
 import com.google.android.gms.location.Geofence.*
 
@@ -56,9 +57,11 @@ class GeofenceManager(context: Context, val callback: (GeoRegion) -> Unit, val l
         geofencingClient?.addGeofences(getGeofencingRequest(geoRegion.convertRegionToGeofence()), geofencePendingIntent)?.run {
             addOnSuccessListener {
                 // Geofences added
+                Log.d("DC", "added them")
             }
             addOnFailureListener {
                 // Failed to add geofences
+                Log.d("DC", "something not ok")
             }
         }
     }

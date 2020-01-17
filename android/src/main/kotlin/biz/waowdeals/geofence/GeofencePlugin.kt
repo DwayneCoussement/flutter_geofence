@@ -29,7 +29,7 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onAttachedToActivity(activityPluginBinding: ActivityPluginBinding) {
         activityPluginBinding.activity?.applicationContext.let {
             GeofencePlugin.geofenceManager = GeofenceManager(it, {
-                //
+                handleGeofenceEvent(it)
             }, {
                 channel?.invokeMethod("userLocationUpdated", hashMapOf("lat" to it.latitude, "lng" to it.longitude))
             })
@@ -82,35 +82,15 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 result.notImplemented()
             }
 
+    private fun handleGeofenceEvent(region: GeoRegion) {
+        if (region.events.contains(GeoEvent.entry)) {
+            channel?.invokeMethod("entry", region)
+        } else {
+            channel?.invokeMethod("exit", region)
+        }
+    }
+
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
 
     }
 }
-
-
-/*
-	public init(channel: FlutterMethodChannel) {
-		self.channel = channel
-		super.init()
-		self.geofenceManager = GeofenceManager(callback: { [weak self] (region) in
-				self?.handleGeofenceEvent(region: region)
-			}, locationUpdate: { [weak self] (coordinate) in
-				self?.channel.invokeMethod("userLocationUpdated", arguments: ["lat": coordinate.latitude, "lng": coordinate.longitude])
-		})
-	}
-
-	public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-		else if (call.method == "getUserLocation") {
-			geofenceManager.getUserLocation()
-		}
-	}
-
-	private func handleGeofenceEvent(region: GeoRegion) {
-		if (region.events.contains(.entry)) {
-			channel.invokeMethod("entry", arguments: region.toDictionary())
-		} else {
-			channel.invokeMethod("exit", arguments: region.toDictionary())
-		}
-	}
-}
- */
