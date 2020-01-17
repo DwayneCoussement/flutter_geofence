@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.location.Location
+import android.os.Looper
 import com.google.android.gms.location.*
 import com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER
 import com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT
@@ -70,7 +71,14 @@ class GeofenceManager(context: Context, val callback: (GeoRegion) -> Unit, val l
     }
 
     private fun refreshLocation() {
-        fusedLocationClient.requestLocationUpdates(LocationRequest.create(), geofencePendingIntent)
+        val locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+                locationUpdate(locationResult.lastLocation)
+            }
+        }
+
+        fusedLocationClient.requestLocationUpdates(LocationRequest.create(), locationCallback, Looper.getMainLooper())
     }
 
     fun getUserLocation() {
@@ -81,7 +89,6 @@ class GeofenceManager(context: Context, val callback: (GeoRegion) -> Unit, val l
                         refreshLocation()
                     } else {
                         locationUpdate(it)
-                        // got it
                     }
                 }
             }
