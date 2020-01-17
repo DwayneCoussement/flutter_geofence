@@ -23,6 +23,15 @@ data class GeoRegion(
         val events: List<GeoEvent>
 )
 
+fun GeoRegion.serialized(): Map<*, *> {
+    return hashMapOf(
+        "id" to id,
+        "radius" to radius,
+        "latitude" to latitude,
+        "longitude" to longitude
+    )
+}
+
 fun GeoRegion.convertRegionToGeofence(): Geofence {
     val transitionType: Int = if (events.contains(GeoEvent.entry)) {
         GEOFENCE_TRANSITION_ENTER
@@ -42,10 +51,16 @@ fun GeoRegion.convertRegionToGeofence(): Geofence {
             .build()
 }
 
-class GeofenceManager(context: Context, val callback: (GeoRegion) -> Unit, val locationUpdate: (Location) -> Unit) {
+class GeofenceManager(context: Context,
+                      callback: (GeoRegion) -> Unit,
+                      val locationUpdate: (Location) -> Unit) {
+
     private val geofencingClient: GeofencingClient = LocationServices.getGeofencingClient(context)
-    private val fusedLocationClient =
-            LocationServices.getFusedLocationProviderClient(context)
+    private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+
+    init {
+        GeofenceBroadcastReceiver.callback = callback
+    }
 
     private val geofencePendingIntent: PendingIntent by lazy {
         val intent = Intent(context, GeofenceBroadcastReceiver::class.java)
@@ -54,7 +69,7 @@ class GeofenceManager(context: Context, val callback: (GeoRegion) -> Unit, val l
 
 
     fun startMonitoring(geoRegion: GeoRegion) {
-        geofencingClient?.addGeofences(getGeofencingRequest(geoRegion.convertRegionToGeofence()), geofencePendingIntent)?.run {
+        geofencingClient.addGeofences(getGeofencingRequest(geoRegion.convertRegionToGeofence()), geofencePendingIntent)?.run {
             addOnSuccessListener {
                 // Geofences added
                 Log.d("DC", "added them")

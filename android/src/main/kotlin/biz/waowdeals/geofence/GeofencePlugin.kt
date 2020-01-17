@@ -84,9 +84,9 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private fun handleGeofenceEvent(region: GeoRegion) {
         if (region.events.contains(GeoEvent.entry)) {
-            channel?.invokeMethod("entry", region)
+            channel?.invokeMethod("entry", region.serialized())
         } else {
-            channel?.invokeMethod("exit", region)
+            channel?.invokeMethod("exit", region.serialized())
         }
     }
 

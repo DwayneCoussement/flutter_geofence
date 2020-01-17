@@ -10,6 +10,8 @@ import com.google.android.gms.location.GeofencingEvent
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
     companion object {
         private const val TAG = "GeoBroadcastReceiver"
+
+        var callback: ((GeoRegion) -> Unit)? = null
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -31,10 +33,11 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 val region = GeoRegion(id=geofence.requestId,
                         latitude = geofencingEvent.triggeringLocation.latitude,
                         longitude = geofencingEvent.triggeringLocation.longitude,
-                        radius = Float.MIN_VALUE,
+                        radius = 50.0.toFloat(),
                         events = listOf(event)
                         )
 
+                callback?.invoke(region)
                 Log.i(TAG, region.toString())
             }
         } else {
