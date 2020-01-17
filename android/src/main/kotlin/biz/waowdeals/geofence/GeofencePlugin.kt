@@ -80,6 +80,15 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         GeofencePlugin.channel = channel
     }
 
+    companion object {
+        @JvmStatic
+        fun registerWith(registrar: Registrar) {
+            val channel = MethodChannel(registrar.messenger(), "geofence")
+            channel.setMethodCallHandler(GeofencePlugin())
+            GeofencePlugin.channel = channel
+        }
+    }
+
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) =
             if (call.method == "addRegion") {
                 val arguments = call.arguments as? HashMap<*, *>
