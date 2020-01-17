@@ -50,19 +50,19 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 val arguments = call.arguments as? HashMap<*, *>
                 if (arguments != null) {
                     val region = safeLet(arguments["id"] as? String,
-                            arguments["radius"] as? Float,
+                            arguments["radius"] as? Double,
                             arguments["lat"] as? Double,
                             arguments["lng"] as? Double,
                             arguments["event"] as? String)
                     { id, radius, latitude, longitude, event ->
                         GeoRegion(
                                 id,
-                                radius,
+                                radius.toFloat(),
                                 latitude,
                                 longitude,
                                 events = when (event) {
-                                    "entry" -> listOf(GeoEvent.entry)
-                                    "exit" -> listOf(GeoEvent.exit)
+                                    "GeolocationEvent.entry" -> listOf(GeoEvent.entry)
+                                    "GeolocationEvent.exit" -> listOf(GeoEvent.exit)
                                     else -> GeoEvent.values().toList()
                                 })
                     }

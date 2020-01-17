@@ -6,8 +6,7 @@ import android.content.Intent
 import android.location.Location
 import android.os.Looper
 import com.google.android.gms.location.*
-import com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER
-import com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT
+import com.google.android.gms.location.Geofence.*
 
 
 enum class GeoEvent {
@@ -36,7 +35,9 @@ fun GeoRegion.convertRegionToGeofence(): Geofence {
                     latitude,
                     longitude,
                     radius
-            ).setTransitionTypes(transitionType)
+            )
+            .setExpirationDuration(NEVER_EXPIRE)
+            .setTransitionTypes(transitionType)
             .build()
 }
 
