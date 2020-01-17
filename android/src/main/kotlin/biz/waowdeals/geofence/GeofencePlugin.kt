@@ -1,8 +1,12 @@
 package biz.waowdeals.geofence
 
-import android.util.Log
+import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.pm.PackageManager
 import androidx.annotation.NonNull
-import com.google.android.gms.location.Geofence
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -10,7 +14,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.plugin.common.PluginRegistry.Registrar
+import io.flutter.plugin.common.PluginRegistry
 
 
 /** GeofencePlugin */
@@ -27,12 +31,43 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     override fun onAttachedToActivity(activityPluginBinding: ActivityPluginBinding) {
-        activityPluginBinding.activity?.applicationContext.let {
+        activityPluginBinding.addRequestPermissionsResultListener { requestCode, permissions, grantResults ->
+            if (requestCode == 999 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startGeofencing(activityPluginBinding.activity.applicationContext)
+                return@addRequestPermissionsResultListener true
+            }
+
+            return@addRequestPermissionsResultListener false
+        }
+
+        activityPluginBinding.activity.let {
+            checkPermissions(it.applicationContext, it)
+        }
+    }
+
+    private fun startGeofencing(context: Context) {
+        context.let {
             GeofencePlugin.geofenceManager = GeofenceManager(it, {
                 handleGeofenceEvent(it)
             }, {
                 channel?.invokeMethod("userLocationUpdated", hashMapOf("lat" to it.latitude, "lng" to it.longitude))
             })
+        }
+    }
+
+    private fun checkPermissions(context: Context, activity: Activity) {
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(activity,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(context,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity,
+                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
+                    999)
+        } else {
+            // Permission has already been granted
+            startGeofencing(context)
         }
     }
 
