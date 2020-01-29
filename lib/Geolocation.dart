@@ -7,7 +7,4 @@ class Geolocation {
   const Geolocation({this.latitude, this.longitude, this.radius, this.id});
 }
 
-enum GeolocationEvent {
-  entry,
-  exit
-}
+enum GeolocationEvent { entry, exit }

@@ -21,10 +21,13 @@ class Geofence {
   static GeofenceCallback _exitCallback;
 
   //ignore: close_sinks
-  static StreamController<Coordinate> userLocationUpdated = new StreamController<Coordinate>();
+  static StreamController<Coordinate> _userLocationUpdated =
+      new StreamController<Coordinate>();
   static Stream<Coordinate> _broadcastLocationStream;
 
-  static Future<void> addGeolocation(Geolocation geolocation, GeolocationEvent event) {
+  /// Adds a geolocation for a certain geo-event
+  static Future<void> addGeolocation(
+      Geolocation geolocation, GeolocationEvent event) {
     return _channel.invokeMethod("addRegion", {
       "lng": geolocation.longitude,
       "lat": geolocation.latitude,
@@ -34,29 +37,41 @@ class Geofence {
     });
   }
 
+  /// Get the latest location the user has been.
   static Future<Coordinate> getCurrentLocation() async {
     _channel.invokeMethod("getUserLocation", null);
     return _broadcastLocationStream.first;
   }
 
+  /// Startup; needed to setup all callbacks and prevent race-issues.
   static void initialize() {
     var completer = new Completer<void>();
-    _broadcastLocationStream = userLocationUpdated.stream.asBroadcastStream();
+    _broadcastLocationStream = _userLocationUpdated.stream.asBroadcastStream();
     _channel.setMethodCallHandler((call) async {
       if (call.method == "entry") {
-        Geolocation location = Geolocation(latitude: call.arguments["latitude"] as double, longitude: call.arguments["longitude"] as double, radius: call.arguments["radius"] as double, id: call.arguments["id"] as String);
+        Geolocation location = Geolocation(
+            latitude: call.arguments["latitude"] as double,
+            longitude: call.arguments["longitude"] as double,
+            radius: call.arguments["radius"] as double,
+            id: call.arguments["id"] as String);
         _entryCallback(location);
       } else if (call.method == "exit") {
-        Geolocation location = Geolocation(latitude: call.arguments["latitude"] as double, longitude: call.arguments["longitude"] as double, radius: call.arguments["radius"] as double, id: call.arguments["id"] as String);
+        Geolocation location = Geolocation(
+            latitude: call.arguments["latitude"] as double,
+            longitude: call.arguments["longitude"] as double,
+            radius: call.arguments["radius"] as double,
+            id: call.arguments["id"] as String);
         _exitCallback(location);
       } else if (call.method == "userLocationUpdated") {
-        Coordinate coordinate = Coordinate(call.arguments["lat"], call.arguments["lng"]);
-        userLocationUpdated.sink.add(coordinate);
+        Coordinate coordinate =
+            Coordinate(call.arguments["lat"], call.arguments["lng"]);
+        _userLocationUpdated.sink.add(coordinate);
       }
       completer.complete();
     });
   }
 
+  /// Set a callback block for a specific geo-event
   static void startListening(GeolocationEvent event, GeofenceCallback entry) {
     switch (event) {
       case GeolocationEvent.entry:
