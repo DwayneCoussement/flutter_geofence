@@ -3,8 +3,8 @@
 # Run `pod lib lint geofence.podspec' to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'geofence'
-  s.version          = '0.0.1'
+  s.name             = 'flutter_geofence'
+  s.version          = '0.1.1'
   s.summary          = 'Plugin to interact with geofences'
   s.description      = <<-DESC
 Plugin to interact with geofences
