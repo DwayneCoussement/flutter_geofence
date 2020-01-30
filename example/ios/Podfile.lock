@@ -1,27 +1,27 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_local_notifications (0.0.1):
+  - flutter_geofence (0.1.1):
     - Flutter
-  - geofence (0.0.1):
+  - flutter_local_notifications (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - flutter_geofence (from `.symlinks/plugins/flutter_geofence/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
-  - geofence (from `.symlinks/plugins/geofence/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  flutter_geofence:
+    :path: ".symlinks/plugins/flutter_geofence/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
-  geofence:
-    :path: ".symlinks/plugins/geofence/ios"
 
 SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_geofence: 08e5427c56c540ffac97425b8e10dd598912fb3d
   flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
-  geofence: eaf3e968746c5ed44b6e2307cf01803a07df51a1
 
 PODFILE CHECKSUM: 1b66dae606f75376c5f2135a8290850eeb09ae83
 

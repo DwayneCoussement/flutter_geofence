@@ -6,3 +6,6 @@
 
 ## 0.1.1
 * Fixes an issue where the plugin wouldn't install with Cocoapods.
+
+## 0.1.2
+* Fix the demo project.
