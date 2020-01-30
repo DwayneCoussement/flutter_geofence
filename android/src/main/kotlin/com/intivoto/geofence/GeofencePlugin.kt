@@ -35,8 +35,8 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             return@addRequestPermissionsResultListener false
         }
 
-        activityPluginBinding.activity.let {
-            checkPermissions(it.applicationContext, it)
+        safeLet(activityPluginBinding.activity, activityPluginBinding.activity.applicationContext) { activity, context ->
+            checkPermissions(context, activity)
         }
 
         print("on attached to activity called.")
@@ -72,8 +72,9 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 return@addRequestPermissionsResultListener false
             }
 
-            registrar.activity().let {
-                checkPermissions(it.applicationContext, it)
+
+            safeLet(registrar.activity(),registrar.activeContext().applicationContext) { activity, context ->
+                checkPermissions(context, activity)
             }
         }
 

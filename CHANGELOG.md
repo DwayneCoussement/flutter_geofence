@@ -9,3 +9,6 @@
 
 ## 0.1.2
 * Fix the demo project.
+
+## 0.1.3
+* Be sure to check nullability on Android; this will prevent background crashes.
