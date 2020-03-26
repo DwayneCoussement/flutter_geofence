@@ -12,3 +12,6 @@
 
 ## 0.1.3
 * Be sure to check nullability on Android; this will prevent background crashes.
+
+## 0.1.4
+* Add a method to stop listening to a region.
