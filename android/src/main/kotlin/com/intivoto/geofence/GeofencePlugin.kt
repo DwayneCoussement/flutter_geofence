@@ -143,6 +143,35 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 } else {
                     result.error("Invalid arguments", "Has invalid arguments", "Has invalid arguments")
                 }
+            } else if (call.method == "removeRegion") {
+                val arguments = call.arguments as? HashMap<*, *>
+                if (arguments != null) {
+                    val region = safeLet(arguments["id"] as? String,
+                            arguments["radius"] as? Double,
+                            arguments["lat"] as? Double,
+                            arguments["lng"] as? Double,
+                            arguments["event"] as? String)
+                    { id, radius, latitude, longitude, event ->
+                        GeoRegion(
+                                id,
+                                radius.toFloat(),
+                                latitude,
+                                longitude,
+                                events = when (event) {
+                                    "GeolocationEvent.entry" -> listOf(GeoEvent.entry)
+                                    "GeolocationEvent.exit" -> listOf(GeoEvent.exit)
+                                    else -> GeoEvent.values().toList()
+                                })
+                    }
+                    if (region != null) {
+                        geofenceManager?.stopMonitoring(region)
+                        result.success(null)
+                    } else {
+                        result.error("Invalid arguments", "Has invalid arguments", "Has invalid arguments")
+                    }
+                } else {
+                    result.error("Invalid arguments", "Has invalid arguments", "Has invalid arguments")
+                }
             } else if (call.method == "getUserLocation") {
                 geofenceManager?.getUserLocation()
                 result.success(null)
