@@ -67,6 +67,18 @@ This gives you the possibility to add regions to the native geofence manager. No
             });
 ```
 
+### removeGeolocation
+
+This gives you the possibility to remove regions you earlier added. Use it like:
+
+```
+            Geofence.removeGeolocation(location, GeolocationEvent.entry).then((onValue) {
+              scheduleNotification("Georegion removed", "Your geofence has been removed!");
+            }).catchError((error) {
+              print("failed with $error");
+            });
+```
+
 ### startListening
 Start listening to geoevents as they happen.
 
