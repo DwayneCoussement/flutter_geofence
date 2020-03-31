@@ -21,6 +21,12 @@ In your `AndroidManifest.xml` you should add the following lines:
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 ```
 
+If you want to build for android 10+ you need to add ACCESS_BACKGROUND_LOCATION too.
+
+```
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+```
+
 You'll need to register for a background service as well.
 
 ```
