@@ -15,3 +15,6 @@
 
 ## 0.1.4
 * Add a method to stop listening to a region.
+
+## 0.1.5
+* Check also the background location permission on Android 10. Thanks @kroobroeck
