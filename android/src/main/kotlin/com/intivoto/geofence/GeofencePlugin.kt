@@ -98,13 +98,14 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
         private fun checkPermissions(context: Context, activity: Activity) {
             // Here, thisActivity is the current activity
-            if (ContextCompat.checkSelfPermission(activity,
+            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(activity,
                             Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(context,
                             Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(activity,
-                        arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
+                        arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION),
                         999)
             } else {
                 // Permission has already been granted
