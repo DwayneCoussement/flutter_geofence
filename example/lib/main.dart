@@ -70,6 +70,9 @@ class _MyAppState extends State<MyApp> {
               print("great failure");
             });
           },),
+          RaisedButton(child: Text("Request Permissions"), onPressed: () {
+            Geofence.requestPermissions();
+          },),
           RaisedButton(child: Text("get user location"), onPressed: () {
               Geofence.getCurrentLocation().then((coordinate) {
                 print("great got latitude: ${coordinate.latitude} and longitude: ${coordinate.longitude}");
