@@ -18,3 +18,6 @@
 
 ## 0.1.5
 * Check also the background location permission on Android 10. Thanks @kroobroeck
+
+## 0.2.0
+* BREAKING: you have to request permissions yourself from this release on. Advantage: you can request permissions whenever it's needed.
