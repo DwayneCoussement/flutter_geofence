@@ -37,8 +37,11 @@ class GeofenceManager: NSObject, CLLocationManagerDelegate {
 		self.callback = callback
 		self.userLocationUpdated = locationUpdate
 		super.init()
-		locationManager.requestAlwaysAuthorization()
 		locationManager.delegate = self
+	}
+	
+	func requestPermissions() {
+		locationManager.requestAlwaysAuthorization()
 	}
 	
 	func startMonitoring(georegion: GeoRegion) {

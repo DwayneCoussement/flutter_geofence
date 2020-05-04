@@ -44,9 +44,10 @@ public class SwiftGeofencePlugin: NSObject, FlutterPlugin {
 			let event = arguments["event"] as? String
 			removeRegion(identifier: identifier, latitude: latitude, longitude: longitude, radius: radius, event: event ?? "")
 			result(nil)
-		}
-		else if (call.method == "getUserLocation") {
+		} else if (call.method == "getUserLocation") {
 			geofenceManager.getUserLocation()
+		} else if (call.method == "requestPermissions") {
+			geofenceManager.requestPermissions()
 		}
 	}
 	

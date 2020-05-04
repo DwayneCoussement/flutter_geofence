@@ -17,23 +17,23 @@ In your `Info.plist` you'll need to add following keys:
 In your `AndroidManifest.xml` you should add the following lines:
 
 ```
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 ```
 
 If you want to build for android 10+ you need to add ACCESS_BACKGROUND_LOCATION too.
 
 ```
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 ```
 
 You'll need to register for a background service as well.
 
 ```
-        <receiver android:name="com.intivoto.geofence.GeofenceBroadcastReceiver"
-            android:enabled="true" android:exported="true"/>
-        <service android:name="com.intivoto.geofence.GeofencePlugin"
-            android:permission="android.permission.BIND_JOB_SERVICE" android:exported="true"/>
+<receiver android:name="com.intivoto.geofence.GeofenceBroadcastReceiver"
+    android:enabled="true" android:exported="true"/>
+<service android:name="com.intivoto.geofence.GeofencePlugin"
+    android:permission="android.permission.BIND_JOB_SERVICE" android:exported="true"/>
 ```
 
 This should be sufficient if your app runs with the new Android embedding (v2, Flutter 1.12), also see: https://flutter.dev/docs/development/packages-and-plugins/plugin-api-migration.
@@ -47,7 +47,15 @@ There is a small example app that prints to console to give an example of functi
 Currently you need to initialize the plugin to let it setup it's system. This *might* be altered in later versions.
 
 ```
-    Geofence.initialize();
+Geofence.initialize();
+```
+
+### Requesting permission
+
+In first versions of the plugin permissions were automatically handled, but as the user of the plugin might want more control over this (or implement it theirselves), this was moved to a separate call.
+
+```
+Geofence.requestPermissions();
 ```
 
 ### getCurrentLocation
@@ -56,9 +64,9 @@ This will give you a `Future` which will resolve with the current `Coordinate` o
 
 Example usage:
 ```
-              Geofence.getCurrentLocation().then((coordinate) {
-                print("Your latitude is ${coordinate.latitude} and longitude ${coordinate.longitude}");
-              });
+Geofence.getCurrentLocation().then((coordinate) {
+    print("Your latitude is ${coordinate.latitude} and longitude ${coordinate.longitude}");
+});
 ```
 
 ### addGeolocation
@@ -66,11 +74,11 @@ Example usage:
 This gives you the possibility to add regions to the native geofence manager. Note that even though by adding them they will get triggered, nothing will happen in your app just yet. You also need to start listening to them. You'll get a callback to tell you that your region has been scheduled though.
 
 ```
-            Geofence.addGeolocation(location, GeolocationEvent.entry).then((onValue) {
-              scheduleNotification("Georegion added", "Your geofence has been added!");
-            }).catchError((error) {
-              print("failed with $error");
-            });
+Geofence.addGeolocation(location, GeolocationEvent.entry).then((onValue) {
+    scheduleNotification("Georegion added", "Your geofence has been added!");
+}).catchError((error) {
+    print("failed with $error");
+});
 ```
 
 ### removeGeolocation
@@ -78,18 +86,18 @@ This gives you the possibility to add regions to the native geofence manager. No
 This gives you the possibility to remove regions you earlier added. Use it like:
 
 ```
-            Geofence.removeGeolocation(location, GeolocationEvent.entry).then((onValue) {
-              scheduleNotification("Georegion removed", "Your geofence has been removed!");
-            }).catchError((error) {
-              print("failed with $error");
-            });
+Geofence.removeGeolocation(location, GeolocationEvent.entry).then((onValue) {
+    scheduleNotification("Georegion removed", "Your geofence has been removed!");
+}).catchError((error) {
+    print("failed with $error");
+});
 ```
 
 ### startListening
 Start listening to geoevents as they happen.
 
 ```
-    Geofence.startListening(GeolocationEvent.entry, (entry) {
-      scheduleNotification("Entry of a georegion", "Welcome to: ${entry.id}");
-    });
+Geofence.startListening(GeolocationEvent.entry, (entry) {
+    scheduleNotification("Entry of a georegion", "Welcome to: ${entry.id}");
+});
 ```

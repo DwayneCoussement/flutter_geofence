@@ -35,11 +35,7 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             return@addRequestPermissionsResultListener false
         }
 
-        safeLet(activityPluginBinding.activity, activityPluginBinding.activity.applicationContext) { activity, context ->
-            checkPermissions(context, activity)
-        }
-
-        print("on attached to activity called.")
+        setupPermissions(activityPluginBinding.activity, activityPluginBinding.activity.applicationContext)
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
@@ -55,6 +51,9 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     companion object {
         private var geofenceManager: GeofenceManager? = null
         private var channel: MethodChannel? = null
+        private var registrar: Registrar? = null
+        private var activity: Activity? = null
+        private var context: Context? = null
 
         @JvmStatic
         fun registerWith(registrar: Registrar) {
@@ -64,16 +63,23 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
             registrar.addRequestPermissionsResultListener { requestCode, permissions, grantResults ->
                 if (requestCode == 999 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    this.
-                    startGeofencing(registrar.activity().applicationContext)
+                    this.startGeofencing(registrar.activity().applicationContext)
                     return@addRequestPermissionsResultListener true
                 }
 
                 return@addRequestPermissionsResultListener false
             }
 
+            setupPermissions(registrar.activity(), registrar.activeContext().applicationContext)
+        }
 
-            safeLet(registrar.activity(),registrar.activeContext().applicationContext) { activity, context ->
+        fun setupPermissions(activity: Activity, context: Context) {
+            this.activity = activity
+            this.context = context
+        }
+
+        fun requestPermissions() {
+            safeLet(activity, context) { activity, context ->
                 checkPermissions(context, activity)
             }
         }
@@ -176,6 +182,8 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             } else if (call.method == "getUserLocation") {
                 geofenceManager?.getUserLocation()
                 result.success(null)
+            } else if (call.method == "requestPermissions") {
+                requestPermissions()
             } else {
                 result.notImplemented()
             }

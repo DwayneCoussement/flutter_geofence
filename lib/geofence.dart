@@ -54,6 +54,10 @@ class Geofence {
     return _broadcastLocationStream.first;
   }
 
+  static void requestPermissions() {
+    _channel.invokeMethod("requestPermissions", null);
+  }
+
   /// Startup; needed to setup all callbacks and prevent race-issues.
   static void initialize() {
     var completer = new Completer<void>();
