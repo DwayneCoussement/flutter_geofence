@@ -58,6 +58,8 @@ In first versions of the plugin permissions were automatically handled, but as t
 Geofence.requestPermissions();
 ```
 
+Please note that **you need to call `GeoFence.requestPermissions()`** at least once before starting to listen, even if the permissions have been granted previously. That's because the actual setup of the geofence mechanism is only triggered by this method. 
+
 ### getCurrentLocation
 
 This will give you a `Future` which will resolve with the current `Coordinate` of the user. If there is one that's recent enough (< 60 seconds old), it'll return this location. 
