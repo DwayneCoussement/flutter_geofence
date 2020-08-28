@@ -63,6 +63,12 @@ class GeofenceManager: NSObject, CLLocationManagerDelegate {
 		}
 	}
 	
+	func stopMonitoringAllRegions() {
+		locationManager.monitoredRegions.forEach {
+			locationManager.stopMonitoring(for: $0)
+		}
+	}
+	
 	func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
 		if let region = region as? CLCircularRegion {
 			let identifier = region.identifier
