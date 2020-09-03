@@ -21,3 +21,6 @@
 
 ## 0.2.0
 * BREAKING: you have to request permissions yourself from this release on. Advantage: you can request permissions whenever it's needed.
+
+## 0.2.1
+* Add the ability to remove all geofences at once.
