@@ -86,6 +86,17 @@ class GeofenceManager(context: Context,
         geofencingClient.removeGeofences(regionsToRemove)
     }
 
+    fun stopMonitoringAllRegions() {
+        geofencingClient.removeGeofences(geofencePendingIntent)?.run {
+            addOnSuccessListener {
+                // Geofences removed
+            }
+            addOnFailureListener {
+                // Failed to remove geofences
+            }
+        }
+    }
+
     private fun getGeofencingRequest(geofence: Geofence): GeofencingRequest {
         val geofenceList = listOf(geofence)
         return GeofencingRequest.Builder().apply {

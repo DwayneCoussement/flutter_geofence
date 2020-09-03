@@ -179,6 +179,9 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 } else {
                     result.error("Invalid arguments", "Has invalid arguments", "Has invalid arguments")
                 }
+            } else if (call.method == "removeRegions") {
+                geofenceManager?.stopMonitoringAllRegions()
+                result.success(null)
             } else if (call.method == "getUserLocation") {
                 geofenceManager?.getUserLocation()
                 result.success(null)

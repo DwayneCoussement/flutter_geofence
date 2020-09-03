@@ -47,6 +47,11 @@ class Geofence {
       "event": event.toString(),
     });
   }
+  
+  /// Stops listening to all regions
+  static Future<void> removeAllGeolocations() {
+    return _channel.invokeMethod("removeRegions", null);
+  }
 
   /// Get the latest location the user has been.
   static Future<Coordinate> getCurrentLocation() async {
