@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -97,6 +99,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   void scheduleNotification(String title, String subtitle) {
+    print("scheduling one with $title and $subtitle");
+    var rng = new Random();
     Future.delayed(Duration(seconds: 5)).then((result) async {
       var androidPlatformChannelSpecifics = AndroidNotificationDetails(
           'your channel id', 'your channel name', 'your channel description',
@@ -105,7 +109,7 @@ class _MyAppState extends State<MyApp> {
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
       await flutterLocalNotificationsPlugin.show(
-          0, title, subtitle, platformChannelSpecifics,
+          rng.nextInt(100000), title, subtitle, platformChannelSpecifics,
           payload: 'item x');
     });
   }
