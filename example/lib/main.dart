@@ -70,6 +70,18 @@ class _MyAppState extends State<MyApp> {
               print("great failure");
             });
           },),
+          RaisedButton(child: Text("Add neighbour region"), onPressed: () {
+            Geolocation location = Geolocation(latitude: 50.853440, longitude: 3.354490, radius: 50.0, id: "Kerkplein15");
+            Geofence.addGeolocation(location, GeolocationEvent.entry).then((onValue) {
+              print("great success");
+              scheduleNotification("Georegion added", "Your geofence has been added!");
+            }).catchError((onError) {
+              print("great failure");
+            });
+          },),
+          RaisedButton(child: Text("Remove regions"), onPressed: () {
+            Geofence.removeAllGeolocations();
+          },),
           RaisedButton(child: Text("Request Permissions"), onPressed: () {
             Geofence.requestPermissions();
           },),
