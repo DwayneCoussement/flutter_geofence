@@ -1,9 +1,5 @@
 <?xml version="1.0"?>
 <gpx version="1.1" creator="Xcode">
-  <wpt lat="50.853410" lon="3.354470">
-    <name>Kerkplein 13</name>
-    <time>2019-12-24T14:00:00Z</time>
-  </wpt>
   <wpt lat="50.820690" lon="3.376950">
     <name>Mokka en Meer</name>
     <time>2014-12-24T14:00:05Z</time>

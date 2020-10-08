@@ -32,6 +32,7 @@ class GeofenceManager: NSObject, CLLocationManagerDelegate {
 	private let locationManager = CLLocationManager()
 	private let callback: ((GeoRegion) -> Void)
 	private let userLocationUpdated: ((CLLocationCoordinate2D) -> Void)
+	private var regionsState: [CLRegion: CLRegionState] = [:]
 	
 	init(callback: @escaping (GeoRegion) -> Void, locationUpdate: @escaping (CLLocationCoordinate2D) -> Void) {
 		self.callback = callback
@@ -52,6 +53,7 @@ class GeofenceManager: NSObject, CLLocationManagerDelegate {
 			region.notifyOnEntry = georegion.events.contains(.entry)
 			region.notifyOnExit = georegion.events.contains(.exit)
 			locationManager.startMonitoring(for: region)
+			locationManager.requestState(for: region)
 		}
 	}
 	
@@ -60,6 +62,7 @@ class GeofenceManager: NSObject, CLLocationManagerDelegate {
 			let center = CLLocationCoordinate2D(latitude: georegion.latitude, longitude: georegion.longitude)
 			let region = CLCircularRegion(center: center, radius: georegion.radius, identifier: georegion.id)
 			locationManager.stopMonitoring(for: region)
+			locationManager.requestState(for: region)
 		}
 	}
 	
@@ -69,20 +72,35 @@ class GeofenceManager: NSObject, CLLocationManagerDelegate {
 		}
 	}
 	
-	func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-		if let region = region as? CLCircularRegion {
-			let identifier = region.identifier
-			let georegion = GeoRegion(id: identifier, radius: region.radius, latitude: region.center.latitude, longitude: region.center.longitude, events: [.entry])
-			callback(georegion)
+	private func requestStateUpdates() {
+		locationManager.monitoredRegions.forEach {
+			locationManager.requestState(for: $0)
 		}
 	}
 	
-	func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-		if let region = region as? CLCircularRegion {
-			let identifier = region.identifier
-			let georegion = GeoRegion(id: identifier, radius: region.radius, latitude: region.center.latitude, longitude: region.center.longitude, events: [.exit])
-			callback(georegion)
+	func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
+		defer { regionsState[region] = state }
+		if let knownState = regionsState[region], state != .unknown, state != knownState {
+			if let region = region as? CLCircularRegion {
+				let identifier = region.identifier
+				if state == .inside {
+					let georegion = GeoRegion(id: identifier, radius: region.radius, latitude: region.center.latitude, longitude: region.center.longitude, events: [.entry])
+					callback(georegion)
+				} else if state == .outside {
+					let georegion = GeoRegion(id: identifier, radius: region.radius, latitude: region.center.latitude, longitude: region.center.longitude, events: [.exit])
+					callback(georegion)
+				}
+			}
 		}
+		print("done!")
+	}
+	
+	func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+		requestStateUpdates()
+	}
+	
+	func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+		requestStateUpdates()
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

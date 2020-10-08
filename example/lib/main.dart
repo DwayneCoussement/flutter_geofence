@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -70,6 +72,18 @@ class _MyAppState extends State<MyApp> {
               print("great failure");
             });
           },),
+          RaisedButton(child: Text("Add neighbour region"), onPressed: () {
+            Geolocation location = Geolocation(latitude: 50.853440, longitude: 3.354490, radius: 50.0, id: "Kerkplein15");
+            Geofence.addGeolocation(location, GeolocationEvent.entry).then((onValue) {
+              print("great success");
+              scheduleNotification("Georegion added", "Your geofence has been added!");
+            }).catchError((onError) {
+              print("great failure");
+            });
+          },),
+          RaisedButton(child: Text("Remove regions"), onPressed: () {
+            Geofence.removeAllGeolocations();
+          },),
           RaisedButton(child: Text("Request Permissions"), onPressed: () {
             Geofence.requestPermissions();
           },),
@@ -85,6 +99,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   void scheduleNotification(String title, String subtitle) {
+    print("scheduling one with $title and $subtitle");
+    var rng = new Random();
     Future.delayed(Duration(seconds: 5)).then((result) async {
       var androidPlatformChannelSpecifics = AndroidNotificationDetails(
           'your channel id', 'your channel name', 'your channel description',
@@ -93,7 +109,7 @@ class _MyAppState extends State<MyApp> {
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
       await flutterLocalNotificationsPlugin.show(
-          0, title, subtitle, platformChannelSpecifics,
+          rng.nextInt(100000), title, subtitle, platformChannelSpecifics,
           payload: 'item x');
     });
   }

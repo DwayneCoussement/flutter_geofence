@@ -5,6 +5,9 @@
       location = "group:test.gpx">
    </FileRef>
    <FileRef
+      location = "group:kerkpleinlocation.gpx">
+   </FileRef>
+   <FileRef
       location = "group:Runner.xcodeproj">
    </FileRef>
    <FileRef
