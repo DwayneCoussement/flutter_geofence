@@ -24,3 +24,6 @@
 
 ## 0.2.1
 * Add the ability to remove all geofences at once.
+
+## 0.3.0
+* Add ability to listen to neighbour locations
