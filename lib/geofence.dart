@@ -23,6 +23,8 @@ class Geofence {
   //ignore: close_sinks
   static StreamController<Coordinate> _userLocationUpdated =
       new StreamController<Coordinate>();
+  // ignore: close_sinks
+  static StreamController<Coordinate> backgroundLocationUpdated = new StreamController<Coordinate>();
   static Stream<Coordinate> _broadcastLocationStream;
 
   /// Adds a geolocation for a certain geo-event
@@ -59,6 +61,14 @@ class Geofence {
     return _broadcastLocationStream.first;
   }
 
+  static Future<void> startListeningForLocationChanges() {
+    return _channel.invokeMethod("startListeningForLocationChanges");
+  }
+
+  static Future<void> stopListeningForLocationChanges() {
+    return _channel.invokeMethod("stopListeningForLocationChanges");
+  }
+
   static void requestPermissions() {
     _channel.invokeMethod("requestPermissions", null);
   }
@@ -86,6 +96,10 @@ class Geofence {
         Coordinate coordinate =
             Coordinate(call.arguments["lat"], call.arguments["lng"]);
         _userLocationUpdated.sink.add(coordinate);
+      } else if (call.method == "backgroundLocationUpdated") {
+        Coordinate coordinate =
+        Coordinate(call.arguments["lat"], call.arguments["lng"]);
+        backgroundLocationUpdated.sink.add(coordinate);
       }
       completer.complete();
     });

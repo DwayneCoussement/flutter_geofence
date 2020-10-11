@@ -91,7 +91,17 @@ class _MyAppState extends State<MyApp> {
               Geofence.getCurrentLocation().then((coordinate) {
                 print("great got latitude: ${coordinate.latitude} and longitude: ${coordinate.longitude}");
               });
-          })
+          }),
+          RaisedButton(child: Text("Listen to background updates"), onPressed: () {
+            Geofence.startListeningForLocationChanges();
+            Geofence.backgroundLocationUpdated.stream.listen((event) {
+              scheduleNotification("You moved significantly", "a significant location change just happened.");
+            });
+          }),
+          RaisedButton(child: Text("Stop listening to background updates"), onPressed: () {
+            Geofence.stopListeningForLocationChanges();
+          }),
+
         ],
         ),
       ),

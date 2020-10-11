@@ -18,7 +18,9 @@ public class SwiftGeofencePlugin: NSObject, FlutterPlugin {
 				self?.handleGeofenceEvent(region: region)
 			}, locationUpdate: { [weak self] (coordinate) in
 				self?.channel.invokeMethod("userLocationUpdated", arguments: ["lat": coordinate.latitude, "lng": coordinate.longitude])
-		})
+			}, backgroundLocationUpdated: { [weak self] (coordinate) in
+				self?.channel.invokeMethod("backgroundLocationUpdated", arguments: ["lat": coordinate.latitude, "lng": coordinate.longitude])
+			})
 	}
 	
 	public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -48,6 +50,10 @@ public class SwiftGeofencePlugin: NSObject, FlutterPlugin {
 			geofenceManager.stopMonitoringAllRegions()
 		} else if (call.method == "getUserLocation") {
 			geofenceManager.getUserLocation()
+		} else if (call.method == "startListeningForLocationChanges") {
+			geofenceManager.startListeningForLocationChanges()
+		} else if (call.method == "stopListeningForLocationChanges") {
+			geofenceManager.stopListeningForLocationChanges()
 		} else if (call.method == "requestPermissions") {
 			geofenceManager.requestPermissions()
 		}
