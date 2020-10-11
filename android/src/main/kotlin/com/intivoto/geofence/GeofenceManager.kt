@@ -5,9 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.os.Looper
+import android.renderscript.RenderScript
 import android.util.Log
 import com.google.android.gms.location.*
 import com.google.android.gms.location.Geofence.*
+import com.google.android.gms.location.LocationRequest.PRIORITY_LOW_POWER
 
 
 enum class GeoEvent {
@@ -53,7 +55,7 @@ fun GeoRegion.convertRegionToGeofence(): Geofence {
 
 class GeofenceManager(context: Context,
                       callback: (GeoRegion) -> Unit,
-                      val locationUpdate: (Location) -> Unit) {
+                      val locationUpdate: (Location) -> Unit, val backgroundUpdate: (Location) -> Unit) {
 
     private val geofencingClient: GeofencingClient = LocationServices.getGeofencingClient(context)
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
@@ -129,4 +131,21 @@ class GeofenceManager(context: Context,
             }
         }
     }
+
+    private val backgroundLocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult?) {
+            locationResult ?: return
+            backgroundUpdate(locationResult.lastLocation)
+        }
+    }
+
+    fun startListeningForLocationChanges() {
+        val request = LocationRequest().setInterval(900000L).setFastestInterval(900000L).setPriority(PRIORITY_LOW_POWER)
+        fusedLocationClient.requestLocationUpdates(request, backgroundLocationCallback, Looper.getMainLooper())
+    }
+
+    fun stopListeningForLocationChanges() {
+        fusedLocationClient.removeLocationUpdates(backgroundLocationCallback)
+    }
+
 }
