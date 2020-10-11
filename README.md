@@ -101,3 +101,26 @@ Geofence.startListening(GeolocationEvent.entry, (entry) {
     scheduleNotification("Entry of a georegion", "Welcome to: ${entry.id}");
 });
 ```
+
+### startListeningForLocationChanges
+Starts listening for significant location changes on iOS, requests the location every 15 minutes on low power on Android.
+
+```
+Geofence.startListeningForLocationChanges();
+```
+
+### stopListeningForLocationChanges
+Stops listening for significant location changes on iOS, stops requesting the location every 15 minutes on low power on Android.
+
+```
+Geofence.stopListeningForLocationChanges();
+```
+
+### backgroundLocationUpdated
+This is a stream you can listen to, only triggered by the listening for significant location changes.
+
+```
+Geofence.backgroundLocationUpdated.stream.listen((event) {
+    scheduleNotification("You moved significantly", "a significant location change just happened.");
+});
+```

@@ -192,7 +192,7 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             } else if (call.method == "startListeningForLocationChanges") {
                 geofenceManager?.startListeningForLocationChanges()
                 result.success(null)
-            } else if (call.method == "startListeningForLocationChanges") {
+            } else if (call.method == "stopListeningForLocationChanges") {
                 geofenceManager?.stopListeningForLocationChanges()
                 result.success(null)
             } else {
