@@ -24,7 +24,8 @@ class Geofence {
   static StreamController<Coordinate> _userLocationUpdated =
       new StreamController<Coordinate>();
   // ignore: close_sinks
-  static StreamController<Coordinate> backgroundLocationUpdated = new StreamController<Coordinate>();
+  static StreamController<Coordinate> backgroundLocationUpdated =
+      new StreamController<Coordinate>();
   static Stream<Coordinate> _broadcastLocationStream;
 
   /// Adds a geolocation for a certain geo-event
@@ -40,7 +41,8 @@ class Geofence {
   }
 
   /// Stops listening to a geolocation for a certain geo-event
-  static Future<void> removeGeolocation(Geolocation geolocation, GeolocationEvent event) {
+  static Future<void> removeGeolocation(
+      Geolocation geolocation, GeolocationEvent event) {
     return _channel.invokeMethod("removeRegion", {
       "lng": geolocation.longitude,
       "lat": geolocation.latitude,
@@ -49,7 +51,7 @@ class Geofence {
       "event": event.toString(),
     });
   }
-  
+
   /// Stops listening to all regions
   static Future<void> removeAllGeolocations() {
     return _channel.invokeMethod("removeRegions", null);
@@ -98,7 +100,7 @@ class Geofence {
         _userLocationUpdated.sink.add(coordinate);
       } else if (call.method == "backgroundLocationUpdated") {
         Coordinate coordinate =
-        Coordinate(call.arguments["lat"], call.arguments["lng"]);
+            Coordinate(call.arguments["lat"], call.arguments["lng"]);
         backgroundLocationUpdated.sink.add(coordinate);
       }
       completer.complete();
