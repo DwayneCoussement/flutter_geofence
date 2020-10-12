@@ -90,6 +90,8 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     handleGeofenceEvent(it)
                 }, {
                     channel?.invokeMethod("userLocationUpdated", hashMapOf("lat" to it.latitude, "lng" to it.longitude))
+                }, {
+                    channel?.invokeMethod("backgroundLocationUpdated", hashMapOf("lat" to it.latitude, "lng" to it.longitude))
                 })
             }
         }
@@ -120,7 +122,7 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         }
     }
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) =
+    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result): Unit =
             if (call.method == "addRegion") {
                 val arguments = call.arguments as? HashMap<*, *>
                 if (arguments != null) {
@@ -187,10 +189,15 @@ public class GeofencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 result.success(null)
             } else if (call.method == "requestPermissions") {
                 requestPermissions()
+            } else if (call.method == "startListeningForLocationChanges") {
+                geofenceManager?.startListeningForLocationChanges()
+                result.success(null)
+            } else if (call.method == "stopListeningForLocationChanges") {
+                geofenceManager?.stopListeningForLocationChanges()
+                result.success(null)
             } else {
                 result.notImplemented()
             }
-
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
 

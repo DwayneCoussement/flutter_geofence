@@ -32,11 +32,16 @@ class GeofenceManager: NSObject, CLLocationManagerDelegate {
 	private let locationManager = CLLocationManager()
 	private let callback: ((GeoRegion) -> Void)
 	private let userLocationUpdated: ((CLLocationCoordinate2D) -> Void)
+	private let backgroundLocationUpdated: ((CLLocationCoordinate2D) -> Void)
 	private var regionsState: [CLRegion: CLRegionState] = [:]
+	private lazy var backgroundLocationListener: BackgroundLocationListener = {
+		return BackgroundLocationListener(backgroundLocationUpdated: backgroundLocationUpdated)
+	}()
 	
-	init(callback: @escaping (GeoRegion) -> Void, locationUpdate: @escaping (CLLocationCoordinate2D) -> Void) {
+	init(callback: @escaping (GeoRegion) -> Void, locationUpdate: @escaping (CLLocationCoordinate2D) -> Void, backgroundLocationUpdated: @escaping (CLLocationCoordinate2D) -> Void) {
 		self.callback = callback
 		self.userLocationUpdated = locationUpdate
+		self.backgroundLocationUpdated = backgroundLocationUpdated
 		super.init()
 		locationManager.delegate = self
 	}
@@ -92,7 +97,6 @@ class GeofenceManager: NSObject, CLLocationManagerDelegate {
 				}
 			}
 		}
-		print("done!")
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
@@ -116,7 +120,55 @@ class GeofenceManager: NSObject, CLLocationManagerDelegate {
 		locationManager.requestLocation()
 	}
 	
+	func startListeningForLocationChanges() {
+		if CLLocationManager.locationServicesEnabled() {
+			switch CLLocationManager.authorizationStatus() {
+			case .notDetermined, .restricted, .denied:
+				break // TODO: give feedback
+			case .authorizedAlways, .authorizedWhenInUse:
+				backgroundLocationListener.startMonitoring()
+			@unknown default:
+				break
+			}
+		} else {
+			// TODO: give feedback
+		}
+	}
+	
+	func stopListeningForLocationChanges() {
+		backgroundLocationListener.stopMonitoring()
+	}
+	
 	func triggerLocationUpdate() {
         locationManager.startUpdatingLocation()
+	}
+}
+
+class BackgroundLocationListener: NSObject, CLLocationManagerDelegate {
+	private lazy var locationManager = CLLocationManager()
+	private let backgroundLocationUpdated: ((CLLocationCoordinate2D) -> Void)
+	
+	init(backgroundLocationUpdated: @escaping ((CLLocationCoordinate2D) -> Void)) {
+		self.backgroundLocationUpdated = backgroundLocationUpdated
+		super.init()
+		locationManager.delegate = self
+	}
+	
+	func startMonitoring() {
+		locationManager.allowsBackgroundLocationUpdates = true
+		locationManager.startMonitoringSignificantLocationChanges()
+	}
+	
+	func stopMonitoring() {
+		locationManager.stopMonitoringSignificantLocationChanges()
+	}
+	
+	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+		guard let coordinate = locations.last?.coordinate else { return }
+		backgroundLocationUpdated(coordinate)
+	}
+	
+	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+
 	}
 }

@@ -27,3 +27,6 @@
 
 ## 0.3.0
 * Add ability to listen to neighbour locations
+
+## 0.4.0
+* Add ability to listen (and stop listening) to significant location updates
