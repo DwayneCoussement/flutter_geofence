@@ -6,6 +6,8 @@ import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_geofence/geofence.dart';
 
+import 'LocationWatcher.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -18,6 +20,8 @@ class _MyAppState extends State<MyApp> {
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       new FlutterLocalNotificationsPlugin();
+
+  LocationWatcher _locationWatcher = LocationWatcher();
 
   @override
   void initState() {
@@ -48,6 +52,10 @@ class _MyAppState extends State<MyApp> {
 
     Geofence.startListening(GeolocationEvent.exit, (entry) {
       scheduleNotification("Exit of a georegion", "Byebye to: ${entry.id}");
+    });
+
+    _locationWatcher.stream.listen((data) {
+      scheduleNotification("Significant location", "An update of significant location did happen.");
     });
 
     setState(() {});
