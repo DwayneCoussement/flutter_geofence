@@ -5,7 +5,7 @@ homepage: https://github.com/DwayneCoussement/geofence
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
-  flutter: ">=1.10.0 <2.0.0"
+  flutter: ">=1.12.0 <2.0.0"
 
 dependencies:
   flutter:
@@ -19,7 +19,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.intivoto.geofence
-        pluginClass: GeofencePlugin
+        package: com.intivoto.flutter_geofence
+        pluginClass: FlutterGeofencePlugin
       ios:
-        pluginClass: GeofencePlugin
+        pluginClass: FlutterGeofencePlugin
