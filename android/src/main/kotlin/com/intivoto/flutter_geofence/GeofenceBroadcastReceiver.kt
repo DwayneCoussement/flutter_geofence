@@ -1,4 +1,4 @@
-package com.intivoto.geofence
+package com.intivoto.flutter_geofence
 
 import android.content.BroadcastReceiver
 import android.content.Context

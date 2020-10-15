@@ -1,4 +1,4 @@
-group 'com.intivoto.geofence'
+group 'com.intivoto.flutter_geofence'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -32,7 +32,6 @@ android {
     }
     defaultConfig {
         minSdkVersion 16
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
         disable 'InvalidPackage'

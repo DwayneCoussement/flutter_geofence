@@ -1,13 +1,13 @@
 import Flutter
 import UIKit
 
-public class SwiftGeofencePlugin: NSObject, FlutterPlugin {
+public class SwiftFlutterGeofencePlugin: NSObject, FlutterPlugin {
 	private var geofenceManager: GeofenceManager!
 	private var channel: FlutterMethodChannel
 	
 	public static func register(with registrar: FlutterPluginRegistrar) {
 		let channel = FlutterMethodChannel(name: "geofence", binaryMessenger: registrar.messenger())
-		let instance = SwiftGeofencePlugin(channel: channel)
+		let instance = SwiftFlutterGeofencePlugin(channel: channel)
 		registrar.addMethodCallDelegate(instance, channel: channel)
 	}
 	
@@ -15,21 +15,21 @@ public class SwiftGeofencePlugin: NSObject, FlutterPlugin {
 		self.channel = channel
 		super.init()
 		self.geofenceManager = GeofenceManager(callback: { [weak self] (region) in
-				self?.handleGeofenceEvent(region: region)
-			}, locationUpdate: { [weak self] (coordinate) in
-				self?.channel.invokeMethod("userLocationUpdated", arguments: ["lat": coordinate.latitude, "lng": coordinate.longitude])
-			}, backgroundLocationUpdated: { [weak self] (coordinate) in
-				self?.channel.invokeMethod("backgroundLocationUpdated", arguments: ["lat": coordinate.latitude, "lng": coordinate.longitude])
-			})
+			self?.handleGeofenceEvent(region: region)
+		}, locationUpdate: { [weak self] (coordinate) in
+			self?.channel.invokeMethod("userLocationUpdated", arguments: ["lat": coordinate.latitude, "lng": coordinate.longitude])
+		}, backgroundLocationUpdated: { [weak self] (coordinate) in
+			self?.channel.invokeMethod("backgroundLocationUpdated", arguments: ["lat": coordinate.latitude, "lng": coordinate.longitude])
+		})
 	}
 	
 	public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
 		if (call.method == "addRegion") {
 			guard let arguments = call.arguments as? [AnyHashable: Any] else { return }
 			guard let identifier = arguments["id"] as? String,
-				let latitude = arguments["lat"] as? Double,
-				let longitude = arguments["lng"] as? Double else {
-					return
+				  let latitude = arguments["lat"] as? Double,
+				  let longitude = arguments["lng"] as? Double else {
+				return
 			}
 			let radius = arguments["radius"] as? Double
 			let event = arguments["event"] as? String
@@ -38,9 +38,9 @@ public class SwiftGeofencePlugin: NSObject, FlutterPlugin {
 		} else if (call.method == "removeRegion") {
 			guard let arguments = call.arguments as? [AnyHashable: Any] else { return }
 			guard let identifier = arguments["id"] as? String,
-				let latitude = arguments["lat"] as? Double,
-				let longitude = arguments["lng"] as? Double else {
-					return
+				  let latitude = arguments["lat"] as? Double,
+				  let longitude = arguments["lng"] as? Double else {
+				return
 			}
 			let radius = arguments["radius"] as? Double
 			let event = arguments["event"] as? String

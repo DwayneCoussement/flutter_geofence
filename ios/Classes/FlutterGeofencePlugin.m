@@ -1,4 +1,4 @@
-#import "GeofencePlugin.h"
+#import "FlutterGeofencePlugin.h"
 #if __has_include(<flutter_geofence/flutter_geofence-Swift.h>)
 #import <flutter_geofence/flutter_geofence-Swift.h>
 #else
@@ -8,8 +8,8 @@
 #import "flutter_geofence-Swift.h"
 #endif
 
-@implementation GeofencePlugin
+@implementation FlutterGeofencePlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  [SwiftGeofencePlugin registerWithRegistrar:registrar];
+  [SwiftFlutterGeofencePlugin registerWithRegistrar:registrar];
 }
 @end
