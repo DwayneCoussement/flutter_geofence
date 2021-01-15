@@ -9,6 +9,7 @@ A Plugin for all your geofence interactions.
 We have a minimum requirement of iOS 9.0.
 
 In your `Info.plist` you'll need to add following keys:
+
 - NSLocationWhenInUseUsageDescription
 - NSLocationAlwaysAndWhenInUseUsageDescription
 
@@ -44,7 +45,7 @@ There is a small example app that prints to console to give an example of functi
 
 ### Initialize
 
-Currently you need to initialize the plugin to let it setup it's system. This *might* be altered in later versions.
+Currently you need to initialize the plugin to let it setup it's system. This _might_ be altered in later versions.
 
 ```
 Geofence.initialize();
@@ -60,9 +61,10 @@ Geofence.requestPermissions();
 
 ### getCurrentLocation
 
-This will give you a `Future` which will resolve with the current `Coordinate` of the user. If there is one that's recent enough (< 60 seconds old), it'll return this location. 
+This will give you a `Future` which will resolve with the current `Coordinate` of the user. If there is one that's recent enough (< 60 seconds old), it'll return this location.
 
 Example usage:
+
 ```
 Geofence.getCurrentLocation().then((coordinate) {
     print("Your latitude is ${coordinate.latitude} and longitude ${coordinate.longitude}");
@@ -94,7 +96,17 @@ Geofence.removeGeolocation(location, GeolocationEvent.entry).then((onValue) {
 ```
 
 ### startListening
+
 Start listening to geoevents as they happen.
+
+NOTE:
+Region events may not happen immediately after a region boundary is crossed. To prevent spurious notifications, iOS doesn’t deliver region notifications until certain threshold conditions are met. Specifically, the user’s location must cross the region boundary, move away from the boundary by a minimum distance, and remain at that minimum distance for at least 20 seconds before the notifications are reported.
+
+The specific threshold distances are determined by the hardware and the location technologies that are currently available. For example, if Wi-Fi is disabled, region monitoring is significantly less accurate. However, for testing purposes, you can assume that the minimum distance is approximately 200 meters.
+
+Source: https://developer.apple.com/forums/thread/94091
+
+You can assume similar constraints on Android devices.
 
 ```
 Geofence.startListening(GeolocationEvent.entry, (entry) {
@@ -103,6 +115,7 @@ Geofence.startListening(GeolocationEvent.entry, (entry) {
 ```
 
 ### startListeningForLocationChanges
+
 Starts listening for significant location changes on iOS, requests the location every 15 minutes on low power on Android.
 
 ```
@@ -110,6 +123,7 @@ Geofence.startListeningForLocationChanges();
 ```
 
 ### stopListeningForLocationChanges
+
 Stops listening for significant location changes on iOS, stops requesting the location every 15 minutes on low power on Android.
 
 ```
@@ -117,6 +131,7 @@ Geofence.stopListeningForLocationChanges();
 ```
 
 ### backgroundLocationUpdated
+
 This is a stream you can listen to, only triggered by the listening for significant location changes.
 
 ```
