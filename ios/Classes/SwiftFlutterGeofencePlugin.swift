@@ -48,14 +48,19 @@ public class SwiftFlutterGeofencePlugin: NSObject, FlutterPlugin {
 			result(nil)
 		} else if (call.method == "removeRegions") {
 			geofenceManager.stopMonitoringAllRegions()
+			result(nil)
 		} else if (call.method == "getUserLocation") {
 			geofenceManager.getUserLocation()
+			result(nil)
 		} else if (call.method == "startListeningForLocationChanges") {
 			geofenceManager.startListeningForLocationChanges()
+			result(nil)
 		} else if (call.method == "stopListeningForLocationChanges") {
 			geofenceManager.stopListeningForLocationChanges()
+			result(nil)
 		} else if (call.method == "requestPermissions") {
 			geofenceManager.requestPermissions()
+			result(nil)
 		}
 	}
 	
