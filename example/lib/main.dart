@@ -29,8 +29,8 @@ class _MyAppState extends State<MyApp> {
         new AndroidInitializationSettings('app_icon');
     var initializationSettingsIOS =
         IOSInitializationSettings(onDidReceiveLocalNotification: null);
-    var initializationSettings = InitializationSettings(android:
-        initializationSettingsAndroid, iOS: initializationSettingsIOS);
+    var initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: null);
   }
@@ -149,8 +149,9 @@ class _MyAppState extends State<MyApp> {
           priority: Priority.high,
           ticker: 'ticker');
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-      var platformChannelSpecifics = NotificationDetails(android:
-          androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+      var platformChannelSpecifics = NotificationDetails(
+          android: androidPlatformChannelSpecifics,
+          iOS: iOSPlatformChannelSpecifics);
       await flutterLocalNotificationsPlugin.show(
           rng.nextInt(100000), title, subtitle, platformChannelSpecifics,
           payload: 'item x');

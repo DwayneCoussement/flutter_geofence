@@ -17,8 +17,8 @@ class Coordinate {
 class Geofence {
   static const MethodChannel _channel = const MethodChannel('geofence');
 
-  static GeofenceCallback _entryCallback = (location){};
-  static GeofenceCallback _exitCallback = (location){};
+  static GeofenceCallback _entryCallback = (location) {};
+  static GeofenceCallback _exitCallback = (location) {};
 
   //ignore: close_sinks
   static StreamController<Coordinate> _userLocationUpdated =
@@ -86,7 +86,7 @@ class Geofence {
             longitude: call.arguments["longitude"] as double,
             radius: call.arguments["radius"] as double,
             id: call.arguments["id"] as String);
-         _entryCallback(location);
+        _entryCallback(location);
       } else if (call.method == "exit") {
         Geolocation location = Geolocation(
             latitude: call.arguments["latitude"] as double,

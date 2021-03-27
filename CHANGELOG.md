@@ -30,3 +30,9 @@
 
 ## 0.4.0
 * Add ability to listen (and stop listening) to significant location updates
+
+## 0.4.1
+* null safety
+* Add result calls to iOS platform code (#36) - Thanks @geisterfurz007
+* Added documentation regarding geofence constraints (#34) - Thanks @rodrigonso
+* Add comment indicating unit of measure for radius (#33) - Thanks @turing-tech
