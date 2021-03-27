@@ -29,8 +29,8 @@ class _MyAppState extends State<MyApp> {
         new AndroidInitializationSettings('app_icon');
     var initializationSettingsIOS =
         IOSInitializationSettings(onDidReceiveLocalNotification: null);
-    var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
+    var initializationSettings = InitializationSettings(android:
+        initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: null);
   }
@@ -116,7 +116,7 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () {
                   Geofence.getCurrentLocation().then((coordinate) {
                     print(
-                        "great got latitude: ${coordinate.latitude} and longitude: ${coordinate.longitude}");
+                        "great got latitude: ${coordinate?.latitude} and longitude: ${coordinate?.longitude}");
                   });
                 }),
             RaisedButton(
@@ -145,12 +145,12 @@ class _MyAppState extends State<MyApp> {
     Future.delayed(Duration(seconds: 5)).then((result) async {
       var androidPlatformChannelSpecifics = AndroidNotificationDetails(
           'your channel id', 'your channel name', 'your channel description',
-          importance: Importance.Max,
-          priority: Priority.High,
+          importance: Importance.high,
+          priority: Priority.high,
           ticker: 'ticker');
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-      var platformChannelSpecifics = NotificationDetails(
-          androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+      var platformChannelSpecifics = NotificationDetails(android:
+          androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
       await flutterLocalNotificationsPlugin.show(
           rng.nextInt(100000), title, subtitle, platformChannelSpecifics,
           payload: 'item x');

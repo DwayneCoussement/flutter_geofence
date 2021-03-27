@@ -17,8 +17,8 @@ class Coordinate {
 class Geofence {
   static const MethodChannel _channel = const MethodChannel('geofence');
 
-  static GeofenceCallback _entryCallback;
-  static GeofenceCallback _exitCallback;
+  static GeofenceCallback _entryCallback = (location){};
+  static GeofenceCallback _exitCallback = (location){};
 
   //ignore: close_sinks
   static StreamController<Coordinate> _userLocationUpdated =
@@ -26,7 +26,7 @@ class Geofence {
   // ignore: close_sinks
   static StreamController<Coordinate> backgroundLocationUpdated =
       new StreamController<Coordinate>();
-  static Stream<Coordinate> _broadcastLocationStream;
+  static Stream<Coordinate>? _broadcastLocationStream;
 
   /// Adds a geolocation for a certain geo-event
   static Future<void> addGeolocation(
@@ -58,9 +58,9 @@ class Geofence {
   }
 
   /// Get the latest location the user has been.
-  static Future<Coordinate> getCurrentLocation() async {
+  static Future<Coordinate?> getCurrentLocation() async {
     _channel.invokeMethod("getUserLocation", null);
-    return _broadcastLocationStream.first;
+    return _broadcastLocationStream?.first;
   }
 
   static Future<void> startListeningForLocationChanges() {
@@ -86,7 +86,7 @@ class Geofence {
             longitude: call.arguments["longitude"] as double,
             radius: call.arguments["radius"] as double,
             id: call.arguments["id"] as String);
-        _entryCallback(location);
+         _entryCallback(location);
       } else if (call.method == "exit") {
         Geolocation location = Geolocation(
             latitude: call.arguments["latitude"] as double,
