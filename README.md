@@ -31,9 +31,9 @@ If you want to build for android 10+ you need to add ACCESS_BACKGROUND_LOCATION 
 You'll need to register for a background service as well.
 
 ```
-<receiver android:name="com.intivoto.geofence.GeofenceBroadcastReceiver"
+<receiver android:name="com.intivoto.flutter_geofence.GeofenceBroadcastReceiver"
     android:enabled="true" android:exported="true"/>
-<service android:name="com.intivoto.geofence.GeofencePlugin"
+<service android:name="com.intivoto.flutter_geofence.GeofencePlugin"
     android:permission="android.permission.BIND_JOB_SERVICE" android:exported="true"/>
 ```
 
