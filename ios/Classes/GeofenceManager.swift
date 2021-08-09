@@ -88,10 +88,10 @@ class GeofenceManager: NSObject, CLLocationManagerDelegate {
 		if let knownState = regionsState[region], state != .unknown, state != knownState {
 			if let region = region as? CLCircularRegion {
 				let identifier = region.identifier
-				if state == .inside {
+				if state == .inside && region.notifyOnEntry {
 					let georegion = GeoRegion(id: identifier, radius: region.radius, latitude: region.center.latitude, longitude: region.center.longitude, events: [.entry])
 					callback(georegion)
-				} else if state == .outside {
+				} else if state == .outside && region.notifyOnExit {
 					let georegion = GeoRegion(id: identifier, radius: region.radius, latitude: region.center.latitude, longitude: region.center.longitude, events: [.exit])
 					callback(georegion)
 				}
