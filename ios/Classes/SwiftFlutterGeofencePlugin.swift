@@ -75,9 +75,9 @@ public class SwiftFlutterGeofencePlugin: NSObject, FlutterPlugin {
 	private func addRegion(identifier: String, latitude: Double, longitude: Double, radius: Double?, event: String) {
 		let events: [GeoEvent]
 		switch event {
-		case "entry":
+		case "GeolocationEvent.entry":
 			events = [.entry]
-		case "exit":
+		case "GeolocationEvent.exit":
 			events = [.exit]
 		default:
 			events = [.entry, .exit]
@@ -89,9 +89,9 @@ public class SwiftFlutterGeofencePlugin: NSObject, FlutterPlugin {
 	private func removeRegion(identifier: String, latitude: Double, longitude: Double, radius: Double?, event: String) {
 		let events: [GeoEvent]
 		switch event {
-		case "entry":
+		case "GeolocationEvent.entry":
 			events = [.entry]
-		case "exit":
+		case "GeolocationEvent.exit":
 			events = [.exit]
 		default:
 			events = [.entry, .exit]
