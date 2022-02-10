@@ -13,6 +13,30 @@ In your `Info.plist` you'll need to add following keys:
 - NSLocationWhenInUseUsageDescription
 - NSLocationAlwaysAndWhenInUseUsageDescription
 
+#### Note:
+ If you using iOS 14 and later you need to add to following to your `Info.plist` to register observatory port with mDNS. 
+ 
+```xml
+<key>NSBonjourServices</key>
+<array>
+    <string>_dartobservatory._tcp</string>
+</array>
+```
+
+#### For Debug (hot restart) or background backgroud location updates
+To avoid your app from craching when you hot restart your app you need to enable background capabilities. If you need this functionalities in production, you will need to explain to Apple why you need background capabilities otherwise, you app will be rejected from the appStore. The following will add background capabilities to your app. 
+
+```xml 
+<key>NSLocationAlwaysUsageDescription</key>
+<string>I want to get your location Information in background</string>
+
+<key>UIBackgroundModes</key>
+<array>
+    <string>location</string>
+</array>
+```
+However, remember to remove the above two keys if you don't need background capabilities in production. 
+
 ### Android
 
 In your `AndroidManifest.xml` you should add the following lines:
