@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.intivoto.geofence_example">
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -11,7 +12,6 @@
 
     <application
         android:allowBackup="true"
-        android:name="io.flutter.app.FlutterApplication"
         android:label="geofence_example"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -20,16 +20,23 @@
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <receiver android:name="com.intivoto.flutter_geofence.GeofenceBroadcastReceiver"
-            android:enabled="true" android:exported="true"/>
-        <service android:name="com.intivoto.flutter_geofence.FlutterGeofencePlugin"
-            android:permission="android.permission.BIND_JOB_SERVICE" android:exported="true"/>
+        <receiver
+            android:name="com.intivoto.flutter_geofence.GeofenceBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name="com.intivoto.flutter_geofence.FlutterGeofencePlugin"
+            android:foregroundServiceType="location"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"
+            tools:ignore="Instantiatable" />
 
         <meta-data
             android:name="flutterEmbedding"
