@@ -36,3 +36,7 @@
 * Add result calls to iOS platform code (#36) - Thanks @geisterfurz007
 * Added documentation regarding geofence constraints (#34) - Thanks @rodrigonso
 * Add comment indicating unit of measure for radius (#33) - Thanks @turing-tech
+
+## 0.4.2
+* Android 11 bugfix
+* Updates with readme
