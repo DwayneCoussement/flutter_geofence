@@ -40,3 +40,7 @@
 ## 0.4.2
 * Android 11 bugfix
 * Updates with readme
+
+## 0.4.3
+* Fix with Flutter 3
+* Don't request permissions at startup (#56)
