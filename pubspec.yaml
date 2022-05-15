@@ -1,6 +1,6 @@
 name: flutter_geofence
 description: Plugin to interact with geofences, and get the user's current/latest location.
-version: 0.4.3
+version: 0.4.4
 homepage: https://github.com/DwayneCoussement/geofence
 
 environment:

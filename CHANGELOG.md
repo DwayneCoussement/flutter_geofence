@@ -44,3 +44,6 @@
 ## 0.4.3
 * Fix with Flutter 3
 * Don't request permissions at startup (#56)
+
+## 0.4.4
+* Update Gradle (#60)
